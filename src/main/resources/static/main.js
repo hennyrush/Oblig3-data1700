@@ -1,101 +1,100 @@
-let utMeldingFornavn = "";
-let utMeldingEtternavn = "";
-let utMeldingEpost = "";
-let utMeldingTlfNr = "";
-let utMeldingFilm = "";
-let utMeldingAntall = "";
 
-
+const blankt = () => {
+    // Clear form fields
+    $('#filmNavn').val('');
+    $('#antallBilletter').val('');
+    $('#fornavn').val('');
+    $('#etternavn').val('');
+    $('#epost').val('');
+    $('#tlfNr').val('');
+};
 
 function inputValidering() {
-    $("#feilFornavn").html("");
-    $("#feilEtternavn").html("");
-    $("#feilEpost").html("");
-    $("#feilTelefonNr").html("");
-    $("#feilAntallBilletter").html("");
-    $("#feilFilmNavn").html("");
+    const film = $("#filmNavn").val();
+    const antall = $("#antallBilletter").val();
+    const fornavn =  $("#fornavn").val();
+    const etternavn = $("#etternavn").val();
+    const telefon = $("#tlfNr").val();
+    const epost = $("#epost").val();
 
+    const visError = (elementId, message) => {
+        $("#" + elementId).text(message);
+    };
 
-    let fornavnInput = $("#fornavn").val();
-    let etternavnInput = $("#etternavn").val();
-    let epostInput = $("#epost").val();
-    let tlfNrInput = $("#tlfNr").val();
-    let filmInput = $("#filmNavn").val();
-    let antallInput = $("#antallBilletter").val();
+    const filmVal = () => {
+        if (film === 'velgFilm') {
+            visError('feilFilmNavn', 'Velg en film');
+            return false;
+        }
+        return true;
+    };
 
-    const regexNavn = /^[a-zA-Z]+$/;
-    const regexEpost = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
-    const regexTlfNr = /^((0047)?|(\+47)?)[4|9]\d{7}$/;
+    const antallVal = () => {
+        if (antall < 1) {
+            visError('feilAntallBilletter', 'Antall må være 1 eller mer');
+            return false;
+        }
+        return true;
+    };
 
+    const fornavnVal = () => {
+        if (fornavn.trim() === '') {
+            visError('feilFornavn', 'Skriv inn ditt fornavn');
+            return false;
+        }
+        return true;
+    };
 
-    if(filmInput === "velgFilm") {
-        utMeldingFilm = "feil";
-        $("feilFilmNavn").html("Velg en film!")
-    } else {
-        utMeldingFilm= $("#filmNavn").val();
-    }
+    const etternavnVal = () => {
+        if (etternavn.trim() === '') {
+            visError('feilEtternavn', 'Skriv inn ditt etternavn');
+            return false;
+        }
+        return true;
+    };
 
-    if (antallInput>=1) {
-        utMeldingAntall = $("#antallBilletter").val();
-    } else {
-        utMeldingAntall = "feil";
-        $("#feilAntallBilletter").html("Velg hvor mange billetter du vil kjøpe");
-    }
+    const telefonVal = () => {
+        if (telefon.trim() === '' || !/^[0-9]{8}$/.test(telefon)) {
+            visError('feilTelefonNr', 'Skriv inn gyldig telefonnummer');
+            return false;
+        }
+        return true;
+    };
 
-    if(regexNavn.test(fornavnInput)) {
-        utMeldingFornavn = $("#fornavn").val();
-    } else {
-        utMeldingFornavn = "feil";
-        $("#feilFornavn").html("ikke gyldig fornavn");
-    }
+    const epostVal = () => {
+        if (epost.trim() === '' || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(epost)) {
+            visError('feilEpost', 'Skriv inn gyldig epost');
+            return false;
+        }
+        return true;
+    };
 
-    if(regexNavn.test(etternavnInput)){
-        utMeldingEtternavn = $("#etternavn").val();
-    } else {
-        utMeldingEtternavn = "feil";
-        $("#feilEtternavn").html("ikke gyldig etternavn");
-    }
-
-    if (regexEpost.test(epostInput)) {
-        utMeldingEpost = $("#epost").val();
-    } else {
-        utMeldingEpost = "feil";
-        $("#feilEpost").html("ikke gyldig epost");
-    }
-
-    if(regexTlfNr.test(tlfNrInput)) {
-        utMeldingTlfNr = $("#tlfNr").val();
-    } else {
-        utMeldingtlfNr = "feil";
-        $("#utMeldingTlfNr").html("ikke gyldig telefonnummer");
-    }
+    return filmVal() && antallVal() && fornavnVal() && etternavnVal() && telefonVal() && epostVal();
 }
 
 function kjopBillett() {
+    if (inputValidering()) {
+        const film = $("#filmNavn").val();
+        const antall = $("#antallBilletter").val();
+        const fornavn =  $("#fornavn").val();
+        const etternavn = $("#etternavn").val();
+        const telefon = $("#tlfNr").val();
+        const epost = $("#epost").val();
 
-    const billett = {
-        film: utMeldingFilm,
-        antall: utMeldingAntall,
-        fornavn: utMeldingFornavn,
-        etternavn: utMeldingEtternavn,
-        epost: utMeldingEpost,
-        tlfNr: utMeldingTlfNr
-    };
+        const billett = {
+            film: film,
+            antall: antall,
+            fornavn: fornavn,
+            etternavn: etternavn,
+            epost: epost,
+            telefon: telefon
+        };
 
-    if (utMeldingFornavn !== "feil" && utMeldingEtternavn
-        !== "feil" && utMeldingEpost !== "feil" && utMeldingTlfNr
-        !== "feil" && utMeldingFilm !== "feil" && utMeldingAntall !== "feil") {
-        $.post("/lagre", billett, function() {
+        $.post("/lagre", billett, function (){
             hentBilletter();
+            blankt();
         });
     }
-
-    $("#filmNavn").val("");
-    $("#antallBilletter").val("");
-    $("#fornavn").val("");
-    $("#etternavn").val("");
-    $("#epost").val("");
-    $("#tlfNr").val("");
 }
 
 function hentBilletter() {
@@ -104,28 +103,22 @@ function hentBilletter() {
     });
 }
 
-function formaterData(billetter){
-    let ut = "<table><th><th>Film</th><th> Antall Billetter</th>" +
-        "<th>Fornavn</th><th>Etternavn</th><th>Epost</th><th>Telefonnummer</th></tr>";
+function formaterData(billetter) {
+    let ut = "<table class='table'><thead><tr><th>Film</th><th>Antall Billetter</th><th>Fornavn</th><th>Etternavn</th><th>Epost</th><th>Telefonnummer</th></tr></thead><tbody>";
 
     for (const x of billetter) {
         ut += "<tr><td>" + x.film + "</td><td>" + x.antall + "</td><td>" +
-            x.fornavn + "</td><td>" + x.etternavn + "</td><td>" + x.epost + "</td><td>" + x.tlfNr + "</td></tr>";
+            x.fornavn + "</td><td>" + x.etternavn + "</td><td>" + x.epost + "</td><td>" + x.telefon + "</td></tr>";
+       // <td><a></a></td> // sletting og endring av enkelt video canvas, webrpog13
     }
-    ut += "</table>";
+    ut += "</tbody></table>";
     $("#output").html(ut);
 }
 
 function slettBillett() {
     $.get("/slett", function() {
-        hentBilletter()
+        hentBilletter();
     });
-    $("#output").HTML = "";
-
-    $("#feilFornavn").HTML="";
-    $("#feilEtternavn").HTML="";
-    $("#feilEpost").HTML="";
-    $("#feilTelefonNr").HTML="";
-    $("#feilFilmNavn").HTML="";
-    $("#feilAntallBilletter").HTML="";
+    $("#output").html("");
+    blankt();
 }

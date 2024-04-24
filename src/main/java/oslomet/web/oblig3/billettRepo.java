@@ -14,12 +14,12 @@ public class billettRepo {
     private JdbcTemplate db;
 
     public void lagreBillett(Billett innBillett) {
-        String sql = "INSERT INTO BILLETT (fornavn, etternavn, epost, telefonnr, antall, film) VALUES(?,?,?,?,?,?)";
-        db.update(sql, innBillett.getFornavn(), innBillett.getEtternavn(), innBillett.getEpost(), innBillett.getTlfNr(), innBillett.getAntallBilletter(), innBillett.getFilmNavn());
+        String sql = "INSERT INTO BILLETT (film, antall, fornavn, etternavn, telefon, epost) VALUES(?,?,?,?,?,?)";
+        db.update(sql, innBillett.getFilm(), innBillett.getAntall(), innBillett.getFornavn(), innBillett.getEtternavn(), innBillett.getTelefon(), innBillett.getEpost());
     }
     public List<Billett> hentAlleBilletter() {
         String sql = "SELECT * FROM BILLETT ORDER BY etternavn";
-        List<Billett> hentBilletter = db.query(sql, new BeanPropertyRowMapper(Billett.class));
+        List<Billett> hentBilletter = db.query(sql, new BeanPropertyRowMapper<>(Billett.class));
         return hentBilletter;
     }
 
