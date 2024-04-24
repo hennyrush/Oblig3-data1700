@@ -7,6 +7,7 @@ import java.util.List;
         import org.springframework.web.bind.annotation.PostMapping;
         import org.springframework.web.bind.annotation.RequestParam;
         import org.springframework.web.bind.annotation.RestController;
+        import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -16,10 +17,9 @@ public class controller {
     private billettRepo rep;
 
     @PostMapping("/lagre")
-    public void lagreBillett(Billett innBillett) {
+    public void lagreBillett(@RequestBody Billett innBillett) {
         rep.lagreBillett(innBillett);
     }
-
     @GetMapping("/hentBilletter")
     public List<Billett> hentBilletter(){
         return rep.hentAlleBilletter();

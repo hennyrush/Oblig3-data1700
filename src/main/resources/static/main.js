@@ -6,6 +6,7 @@ let utMeldingFilm = "";
 let utMeldingAntall = "";
 
 
+
 function inputValidering() {
     $("#feilFornavn").html("");
     $("#feilEtternavn").html("");
@@ -63,10 +64,10 @@ function inputValidering() {
     }
 
     if(regexTlfNr.test(tlfNrInput)) {
-        utMeldingtlfNr = $("#tlfNr").val();
+        utMeldingTlfNr = $("#tlfNr").val();
     } else {
         utMeldingtlfNr = "feil";
-        $("#feilTelefonNr").html("ikke gyldig telefonnummer");
+        $("#utMeldingTlfNr").html("ikke gyldig telefonnummer");
     }
 }
 

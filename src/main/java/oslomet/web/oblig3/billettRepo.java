@@ -14,8 +14,8 @@ public class billettRepo {
     private JdbcTemplate db;
 
     public void lagreBillett(Billett innBillett) {
-        String sql = "INSERT INTO BILLETT (fornavn, etternavn, epost, tlfNr, antallBilletter, filmNavn) VALUES(?,?,?,?,?,?)";
-        db.update(sql,innBillett.getFornavn(), innBillett.getEtternavn(), innBillett.getEpost(), innBillett.getTlfNr(), innBillett.getAntallBilletter(), innBillett.getFilmNavn());
+        String sql = "INSERT INTO BILLETT (fornavn, etternavn, epost, telefonnr, antall, film) VALUES(?,?,?,?,?,?)";
+        db.update(sql, innBillett.getFornavn(), innBillett.getEtternavn(), innBillett.getEpost(), innBillett.getTlfNr(), innBillett.getAntallBilletter(), innBillett.getFilmNavn());
     }
     public List<Billett> hentAlleBilletter() {
         String sql = "SELECT * FROM BILLETT ORDER BY etternavn";
